@@ -1,18 +1,26 @@
 <div class="row-fluid">
   <div class="span6">
-    <form method="post" enctype="multipart/form-data">
-      <label class="btn" for="fileUpload">Upload</label>
-      <input type="file" name="file" id="fileUpload">
-    </form>
+    <div class="well">
+      <div>You can upload small file, we will keep it for 3 days.</div>
+      <br>
+      <form method="post" enctype="multipart/form-data">
+        <label class="btn btn-primary" for="fileUpload">Upload</label>
+        <input type="file" name="file" id="fileUpload">
+      </form>
+    </div>
   </div>
   <div class="span6">
-    <form>
-      <div>
-        <input type="text" id="codeBox" name="code">
-      </div>
-      <div>
-        <input class="btn" type="submit" value="Download">
-      </div>
-    </form>
+    <div class="well">
+      <div>Or, it's time to download.</div>
+      <br>
+      <form>
+        <div>
+          <input type="text" id="codeBox" name="code" placeholder="download code">
+        </div>
+        <div>
+          <input class="btn" type="submit" value="Download">
+        </div>
+      </form>
+    </div>
   </div>
 </div>

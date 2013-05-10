@@ -1,2 +1,6 @@
-<div><span>Your download code is <strong><?php echo $this->code ?></strong></span></div>
-<div>Download link: <a href="<?php echo $this->download_uri ?>"><?php echo $this->download_uri ?></a></div>
+<?php if ($this->download_uri): ?>
+  <div><span>Your download code is <strong><?php echo $this->code ?></strong></span></div>
+  <div>Download link: <a href="<?php echo $this->download_uri ?>"><?php echo $this->download_uri ?></a></div>
+<?php else: ?>
+	Sorry, we don't know this file.
+<?php endif ?>

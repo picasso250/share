@@ -111,7 +111,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
 
     $matched = 0;
     $methods_matched = array();
-    $apc = function_exists('apc_fetch');
+    $apc = false; // function_exists('apc_fetch'); // on sae
 
     ob_start();
 

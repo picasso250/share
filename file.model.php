@@ -51,7 +51,7 @@ function upload_file($file_arr)
 function save_uri($uri)
 {
     $orm = ORM::for_table('file');
-    $expire = '1 second';
+    $expire = '3 day';
     $reuse = $orm
         ->where_raw("`created` < DATE_SUB(NOW(), INTERVAL $expire)")
         ->order_by_asc('created')

@@ -58,9 +58,12 @@ function save_uri($uri)
         ->find_one();
     if ($reuse) {
         if (defined(SAE_APPNAME)) {
-            $file_name = substr($reuse->uri, strlen(UP_DOMAIN));
+            $file_name = preg_match('%http://.+?/(.+)$%', $reuse->uri);
             $s = new SaeStorage();
-            $s->remove($file_name);
+            $rs = $s->delete(UP_DOMAIN, $file_name);
+            if (!$rs) {
+                die('delete fail');
+            }
         } else {
             $fpath = APP_ROOT.'.'.$uri;
             unlink($fpath);

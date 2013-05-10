@@ -17,10 +17,10 @@ function _post($key = null)
 
 function _static_url($url)
 {
-    return "/todo/$url";
+    return "/$url";
 }
 
 function _url($url)
 {
-    return "/todo/$url";
+    return "/$url";
 }

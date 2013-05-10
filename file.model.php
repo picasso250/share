@@ -15,6 +15,10 @@ if( defined('SAE_APPNAME') ) {
     ORM::configure('username', 'root');
     ORM::configure('password', '');
 }
+ORM::configure('driver_options', array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
+if (defined('DEV')) {
+    ORM::configure('logging', true);
+}
 
 function upload_file($file_arr)
 {
@@ -39,7 +43,7 @@ function upload_file($file_arr)
         if (!$rs) {
             die('upload failed');
         }
-        $uri = 'http://'.$_SERVER['HTTP_HOST'].'/'.substr($dest, strlen(APP_ROOT));
+        $uri = '/'.substr($dest, strlen(APP_ROOT));
     }
     return save_uri($uri);
 }
@@ -47,7 +51,22 @@ function upload_file($file_arr)
 function save_uri($uri)
 {
     $orm = ORM::for_table('file');
-    $reuse = $orm->where_lt('created', time() - 24*3600)->find_one();
+    $expire = '1 day';
+    $reuse = $orm
+        ->where_raw("`created` < DATE_SUB(NOW(), INTERVAL $expire)")
+        ->order_by_asc('created')
+        ->find_one();
+    if ($reuse) {
+        if (defined(SAE_APPNAME)) {
+            $file_name = substr($reuse->uri, strlen(UP_DOMAIN));
+            $s = new SaeStorage();
+            $s->remove($file_name);
+        } else {
+            $fpath = APP_ROOT.'.'.$uri;
+            unlink($fpath);
+        }
+        $f = $reuse;
+    }
     $f = $reuse ?: $orm->create();
     $f->uri = $uri;
     $f->set_expr('created', 'NOW()');
@@ -62,4 +81,3 @@ function get_uri($code)
     $f = ORM::for_table('file')->find_one(base_convert(strtolower($code), 36, 10));
     return $f ? $f->uri : null;
 }
-

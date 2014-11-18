@@ -24,6 +24,9 @@ function upload_file($file_arr)
 {
     $file_name = uniqid().'-'.$file_arr['name'];
     $tmp_file = $file_arr['tmp_name'];
+    if ($file_arr['error']) {
+        die('file upload error');
+    }
     if (defined('SAE_APPNAME')) {
         $content = file_get_contents($tmp_file);
         $s = new SaeStorage();

@@ -6,22 +6,25 @@ ob_start();
 session_start();
 date_default_timezone_set('PRC');
 
-require_once 'lib/klein.php';
+require_once __DIR__ . '/vendor/autoload.php';
+
+$klein = new \Klein\Klein();
+
 require_once 'file.model.php';
 
-respond(function ($request, $response) {
-    $response->layout('view/master.phtml');
+$klein->respond(function ($request, $response, $service) {
+    $service->layout('view/master.phtml');
 });
 
 // index
-respond('GET', '/', function ($request, $response) {
+$klein->respond('GET', '/', function ($request, $response, $service) {
     if ($request->code) {
         $response->redirect('/'.$request->code);
     }
-    $response->render('view/index.phtml');
+    $service->render('view/index.phtml');
 });
 
-respond('POST', '/', function ($request, $response) {
+$klein->respond('POST', '/', function ($request, $response) {
     if (isset($_FILES['file'])) {
         $code = upload_file($_FILES['file']);
         $response->redirect('/'.$code);
@@ -30,11 +33,12 @@ respond('POST', '/', function ($request, $response) {
 });
 
 // get file
-respond('/[:code]', function ($request, $response) {
+$klein->respond('/[:code]', function ($request, $response, $service) {
     $response->code = $request->code;
     $response->share_link = 'http://'.$_SERVER['HTTP_HOST'].'/'.$response->code;
     $response->download_uri = get_uri($request->code);
 
-    $response->render('view/download.phtml');
+    $service->render('view/download.phtml');
 });
-dispatch();
+
+$klein->dispatch();
